@@ -2,10 +2,12 @@ const express = require('express');
 const mongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectId
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const server = express();
 require('dotenv').config();
 
 server.use(bodyParser.json());
+server.use(cors());
 
 const connectionString =
     `mongodb+srv://patstein:${process.env.MONGO_DB_PW}@patradar.cnfbnq1.mongodb.net/?retryWrites=true&w=majority&appName=patRadar`;
@@ -43,7 +45,9 @@ server.post('/technologies', async (req, res) => {
     const client = await mongoClient.connect(connectionString);
     const db = client.db('patRadar');
     const collection = db.collection('technologies');
-    await collection.insertOne(req.body);
+    // Convert date strings to Date objects before inserting into MongoDB
+    const technology = { ...req.body, createdAt: new Date(req.body.createdAt) };
+    await collection.insertOne(technology);
     res.status(201);
     res.end();
 });
