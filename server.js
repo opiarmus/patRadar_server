@@ -47,8 +47,8 @@ server.post('/technologies', async (req, res) => {
     const collection = db.collection('technologies');
     // Convert date strings to Date objects before inserting into MongoDB
     const technology = { ...req.body, createdAt: new Date(req.body.createdAt) };
-    await collection.insertOne(technology);
-    res.status(201);
+    const result = await collection.insertOne(technology);
+    res.status(201).json({ _id: result.insertedId });
     res.end();
 });
 
