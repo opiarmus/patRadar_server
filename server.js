@@ -79,6 +79,16 @@ server.put('/technologies', async (req, res) => {
     if (result.matchedCount === 0) {
         return res.status(404).json({ message: 'Technology not found' });
     }
+
+    // Add an entry to the changes collection
+    const changesCollection = db.collection('technologyChanges');
+    await changesCollection.insertOne({
+        technologyId: technology._id,
+        updatedAt: new Date(),
+        ring: technology.ring,
+        updatedBy: technology.creatorId // TODO: insert the correct user that did the update
+    });
+
     res.status(200).json({ _id: result.upsertedId});
     res.end();
 });
