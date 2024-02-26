@@ -101,7 +101,7 @@ server.get('/', (req, res) => {
     res.send('Successful response.');
 });
 
-server.listen(9999, () => {
-    console.log('patRadar server is listening on port 9999...');
+server.listen(9998, () => {
+    console.log('patRadar server is listening on port 9998...');
 });
 
