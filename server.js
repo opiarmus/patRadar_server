@@ -31,7 +31,7 @@ server.get('/technologies/:id', async (req, res) => {
     const client = await mongoClient.connect(connectionString);
     const db = client.db('patRadar');
     const collection = db.collection('technologies');
-    const result = await collection.findOne({ _id: objectId(req.params.id) });
+    const result = await collection.findOne({ _id: new objectId(req.params.id) });
     if (result) {
         res.send(result);
     } else {
@@ -49,6 +49,37 @@ server.post('/technologies', async (req, res) => {
     const technology = { ...req.body, createdAt: new Date(req.body.createdAt) };
     const result = await collection.insertOne(technology);
     res.status(201).json({ _id: result.insertedId });
+    res.end();
+});
+
+// PUT /technologies - edits existing technology
+server.put('/technologies', async (req, res) => {
+    const client = await mongoClient.connect(connectionString);
+    const db = client.db('patRadar');
+    const collection = db.collection('technologies');
+    // Convert date strings to Date objects before inserting into MongoDB
+    let technology = {
+        ...req.body,
+        createdAt: new Date(req.body.createdAt)
+    };
+    if (req.body.publishedAt) {
+        technology = {
+            ...technology,
+            publishedAt: new Date(req.body.publishedAt)
+        }
+    }
+    technology.ring = parseInt(technology.ring);
+    technology.category = parseInt(technology.category);
+    // remove the _id because this can't be overwritten
+    const { _id, ...saveTech } = technology;
+    const result = await collection.updateOne(
+        { _id: new objectId(technology._id) },
+        { $set: saveTech }
+    );
+    if (result.matchedCount === 0) {
+        return res.status(404).json({ message: 'Technology not found' });
+    }
+    res.status(200).json({ _id: result.upsertedId});
     res.end();
 });
 
