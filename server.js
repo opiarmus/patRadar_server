@@ -9,8 +9,7 @@ require('dotenv').config();
 server.use(bodyParser.json());
 server.use(cors());
 
-const connectionString =
-    `mongodb+srv://patstein:${process.env.MONGO_DB_PW}@patradar.cnfbnq1.mongodb.net/?retryWrites=true&w=majority&appName=patRadar`;
+const connectionString = process.env.MONGO_DB_CS;
 
 server.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}]`);
