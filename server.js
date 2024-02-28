@@ -16,7 +16,13 @@ server.use((req, res, next) => {
     next();
 });
 
-// GET /technologies - returns all technologies in array
+/**
+ * Retrieves all technologies in an array.
+ *
+ * @route GET /technologies
+ * @returns {Array} An array containing all technologies.
+ * @throws {Error} If there's an issue retrieving the technologies.
+ */
 server.get('/technologies', async (req, res) => {
     const client = await mongoClient.connect(connectionString);
     const db = client.db('patRadar');
@@ -25,7 +31,14 @@ server.get('/technologies', async (req, res) => {
     res.send(result);
 });
 
-// GET /technologies/{id} - returns technology with this id if it exists, otherwise fail message
+/**
+ * Retrieves a single technology by ID.
+ *
+ * @route GET /technologies/{id}
+ * @param {string} id - The ID of the technology to retrieve.
+ * @returns {Object} The technology object corresponding to the provided ID.
+ * @throws {Error} If the technology with the provided ID does not exist.
+ */
 server.get('/technologies/:id', async (req, res) => {
     const client = await mongoClient.connect(connectionString);
     const db = client.db('patRadar');
@@ -39,7 +52,14 @@ server.get('/technologies/:id', async (req, res) => {
     res.end();
 });
 
-// POST /technologies - saves new technology to array
+/**
+ * Creates a new technology.
+ *
+ * @route POST /technologies
+ * @param {Object} technology - The technology object to be created.
+ * @returns {Object} An object containing the ID of the newly created technology.
+ * @throws {Error} If there's an issue creating the technology.
+ */
 server.post('/technologies', async (req, res) => {
     const client = await mongoClient.connect(connectionString);
     const db = client.db('patRadar');
@@ -51,7 +71,14 @@ server.post('/technologies', async (req, res) => {
     res.end();
 });
 
-// PUT /technologies - edits existing technology
+/**
+ * Edits an existing technology.
+ *
+ * @route PUT /technologies
+ * @param {Object} technology - The updated technology object.
+ * @returns {Object} An object containing the ID of the updated technology.
+ * @throws {Error} If the technology with the provided ID does not exist or there's an issue updating it.
+ */
 server.put('/technologies', async (req, res) => {
     const client = await mongoClient.connect(connectionString);
     const db = client.db('patRadar');
