@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const server = express();
 require('dotenv').config();
+const PORT = process.env.PORT || 5001;
 
 server.use(bodyParser.json());
 server.use(cors());
@@ -124,10 +125,10 @@ server.get('/request-type', (req, res) => {
 })
 
 server.get('/', (req, res) => {
-    res.send('Successful response.');
+    res.send(`PatServer is up and running on port: ${PORT}`);
 });
 
-server.listen(9998, () => {
-    console.log('patRadar server is listening on port 9998...');
+server.listen(PORT, () => {
+    console.log(`patRadar server is listening on port ${PORT}...`);
 });
 
